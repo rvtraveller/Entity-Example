@@ -1,0 +1,38 @@
+<?php
+
+function entity_example_schema() {
+  $schema['entity_example_bid'] = array(
+    'description' => 'An example of a bid entity type.',
+    'fields' => array(
+      'bid_id' => array(
+        'description' => 'The primary identifier of a bid',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'currency' => array(
+        'description' => 'The currency of the bid',
+        'type' => 'varchar',
+        'length' => 5,
+        'not null' => TRUE,
+        'default' => 'USD',
+      ),
+      'amount' => array(
+        'description' => 'The amount of the bid',
+        'type' => 'float',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+      'timestamp' => array(
+        'description' => 'The time of the bid',
+        'type' => 'int',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('bid_id'),
+  );
+  return $schema;
+}
+
+

@@ -1,0 +1,65 @@
+<?php
+
+function entity_example_entity_info() {
+  $entities = array();
+  $entities['bid'] = array(
+    'label' => t('Bid'),
+    'plural label' => t('Bids'),
+    'entity class' => 'Entity',
+    'controller class' => 'EntityAPIController',
+    'module' => 'entity_example',
+    'base table' => 'entity_example_bid',
+    'fieldable' => FALSE,
+    'entity keys' => array(
+      'id' => 'bid_id',
+    ),
+  );
+  return $entities;
+}
+
+function entity_example_menu() {
+  $items = array();
+
+  $items['bids/generate/%'] = array(
+    'page callback' => 'entity_example_generate_bids',
+    'page arguments' => array(2),
+    'access arguments' => array('administer site content'),
+    'type' => MENU_CALLBACK,
+  );
+  // If this were a standard entity with a convenience loader, we could specify it as such in teh display and have the node loaded automatically
+  $items['bids/display/%'] = array(
+    'page callback' => 'entity_example_page_bid',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function entity_example_generate_bids($num) {
+  if ($num > 1000) {
+    $num = 1000;
+  }
+  for( $i=0; $i<$num; $i++) {
+    $bid = entity_create('bid', array());
+    $bid->currency = 'USD';
+    $bid->amount = rand(1, 500);
+    $bid->timestamp = time();
+    $bid->save();
+  }
+  return 'Generated ' . $num . ' entities.';
+}
+
+function entity_example_page_bid($bid_id) {
+  $entity = entity_load('bid', array($bid_id));
+  if (empty($entity)) {
+    return 'Could not find entity with ID ' . check_plain($bid_id);
+  }
+  $bid = entity_metadata_wrapper('bid', $bid_id);
+  $bid_currency = $bid->currency->value();
+  $bid_id = $bid->bid_id->value();
+  $bid_amount = $bid->amount->value();
+  $bid_time = $bid->timestamp->value();
+  $output = 'Bid #' . $bid_id . ' was placed at ' . $bid_time .'.  The amount is ' . $bid_amount . ' and the currency is ' . $bid_currency . '.';
+  return $output;
+}

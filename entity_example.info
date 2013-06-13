@@ -1,0 +1,4 @@
+name = "Multiple Submit Buttons"
+description = "A module that provides a form with 2 submit buttons, each with a different action."
+core = 7.x
+package = Demos
